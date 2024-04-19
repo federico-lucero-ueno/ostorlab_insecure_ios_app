@@ -1,0 +1,28 @@
+name: Checkmarx Scan
+
+on:
+  push:
+    branches:
+      - main  # Adjust these branches as necessary
+
+jobs:
+  checkmarx_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Checkmarx Scan
+        env:
+          CHECKMARX_HOST: ${{ secrets.CHECKMARX_HOST }}
+          CHECKMARX_API_KEY: ${{ secrets.CHECKMARX_API_KEY }}
+        run: |
+          echo "Starting Checkmarx scan..."
+          # Use GitHub's repository name for the Checkmarx project name
+          PROJECT_NAME="${GITHUB_REPOSITORY}"  # This strips any owner prefix to just use the repo name
+          echo "Using project name: $PROJECT_NAME"
+          # Insert the Checkmarx scan command, ensuring to use the PROJECT_NAME
+          # Replace the placeholder with the actual command according to your Checkmarx setup
+          cx scan --project-name "$PROJECT_NAME" --cx-server "$CHECKMARX_HOST" --api-key "$CHECKMARX_API_KEY"
+          echo "Scan complete."
